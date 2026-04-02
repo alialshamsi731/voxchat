@@ -1,5 +1,5 @@
 # Stage 1: Build Frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:18-slim AS frontend-builder
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2: Build Backend & Production Image
-FROM node:18-alpine
+FROM node:18-slim
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install

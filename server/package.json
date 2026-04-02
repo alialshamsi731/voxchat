@@ -1,0 +1,27 @@
+{
+  "name": "voxlink-server",
+  "version": "1.0.0",
+  "description": "VoxLink backend server",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "npx prisma db push && node server.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "3.3.6",
+    "socket.io": "^4.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prisma": "^5.7.1"
+  }
+}

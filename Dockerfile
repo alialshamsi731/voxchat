@@ -1,0 +1,30 @@
+# Stage 1: Build Frontend
+FROM node:18-alpine AS frontend-builder
+WORKDIR /app/client
+COPY client/package*.json ./
+RUN npm install
+COPY client/ ./
+RUN npm run build
+
+# Stage 2: Build Backend & Production Image
+FROM node:18-alpine
+WORKDIR /app/server
+COPY server/package*.json ./
+RUN npm install
+COPY server/ ./
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy frontend build into standard location accessed by server.js
+COPY --from=frontend-builder /app/client/dist /app/client/dist
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3001
+
+# Expose port
+EXPOSE 3001
+
+# Start the application
+CMD ["npm", "start"]

@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-bg-900 text-gray-100 font-sans antialiased;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #root {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-bg-500 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand hover:bg-brand-dark text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-bg-600 text-gray-300 hover:text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  .btn-danger {
+    @apply bg-accent-red/10 hover:bg-accent-red text-accent-red hover:text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  .input-field {
+    @apply w-full bg-bg-900 border border-bg-500 text-gray-100 placeholder-gray-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-200;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-bg-600 hover:text-gray-100 cursor-pointer transition-all duration-150 text-sm font-medium;
+  }
+
+  .sidebar-item.active {
+    @apply bg-bg-600 text-white;
+  }
+
+  .channel-item {
+    @apply flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-500 hover:bg-bg-600 hover:text-gray-200 cursor-pointer transition-all duration-150 text-sm;
+  }
+
+  .channel-item.active {
+    @apply bg-bg-600 text-white;
+  }
+
+  .avatar {
+    @apply rounded-full bg-brand flex items-center justify-center text-white font-semibold shrink-0;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50;
+  }
+
+  .modal-box {
+    @apply bg-bg-800 border border-bg-500 rounded-2xl p-6 w-full max-w-md shadow-2xl;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+
+  // Relations
+  ownedGroups      Group[]         @relation("GroupOwner")
+  groupMemberships GroupMember[]
+  sentMessages     GroupMessage[]  @relation("GroupMessageSender")
+  dmConversations1 DMConversation[] @relation("DMUser1")
+  dmConversations2 DMConversation[] @relation("DMUser2")
+  sentDMMessages   DMMessage[]     @relation("DMMessageSender")
+
+  @@index([username])
+  @@index([email])
+}
+
+model Group {
+  id         String   @id @default(cuid())
+  name       String
+  iconUrl    String?
+  ownerId    String
+  inviteCode String   @unique
+  createdAt  DateTime @default(now())
+
+  // Relations
+  owner    User          @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members  GroupMember[]
+  messages GroupMessage[]
+
+  @@index([inviteCode])
+  @@index([ownerId])
+}
+
+model GroupMember {
+  id        String   @id @default(cuid())
+  groupId   String
+  userId    String
+  role      String   @default("member") // owner | admin | member
+  joinedAt  DateTime @default(now())
+
+  // Relations
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+model GroupMessage {
+  id        String   @id @default(cuid())
+  groupId   String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  // Relations
+  group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sender User  @relation("GroupMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+  @@index([senderId])
+}
+
+model DMConversation {
+  id            String   @id @default(cuid())
+  user1Id       String
+  user2Id       String
+  lastMessageAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  // Relations
+  user1    User        @relation("DMUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2    User        @relation("DMUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages DMMessage[]
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@index([lastMessageAt])
+}
+
+model DMMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime @default(now())
+
+  // Relations
+  conversation DMConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User           @relation("DMMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
+}

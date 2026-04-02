@@ -1,5 +1,6 @@
 # Stage 1: Build Frontend
 FROM node:18-slim AS frontend-builder
+RUN apt-get update && apt-get install -y openssl
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
@@ -8,6 +9,7 @@ RUN npm run build
 
 # Stage 2: Build Backend & Production Image
 FROM node:18-slim
+RUN apt-get update && apt-get install -y openssl
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install
